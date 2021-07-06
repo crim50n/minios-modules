@@ -118,6 +118,7 @@ configure_package vlc inotify-tools samba x11vnc novnc openbox
 
 cat >/mediaplayer.config <<'EOF'
 root_password=P1ayMyVide0
+user_password=P1ayMyVide0
 x11vnc_password=P1ayMyVide0
 samba_password=P1ayMyVide0
 vlc_password=P1ayMyVide0
