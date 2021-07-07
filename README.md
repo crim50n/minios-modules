@@ -1,2 +1,2 @@
 # minios-modules
-Here are the source codes for build modules in MiniOS.
+Here are the source codes for building modules in MiniOS.
