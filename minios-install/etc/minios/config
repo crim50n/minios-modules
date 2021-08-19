@@ -27,8 +27,8 @@ PACKAGE_VARIANT="standard"
 LIVE_TYPE="livekit"
 
 # default is output to log. you can use OUTPUT="/dev/stdout" if you want to route events to standard output.
-#OUTPUT="/dev/stdout"
-OUTPUT="/dev/null"
+OUTPUT="/dev/stdout"
+#OUTPUT="/dev/null"
 
 DEBIAN_FRONTEND_TYPE="noninteractive"
 
