@@ -66,58 +66,67 @@ function console_colours() {
 # =================================================================
 function help() {
 	# if $1 is set, use $1 as headline message in help()
-	if grep 'LANG="ru_RU.UTF-8"' /etc/default/locale >>$OUTPUT; then
-		if [ -z ${1+x} ]; then
-			echo -e "${LIGHTYELLOW}Этот скрипт собирает загружаемый ISO образ $SYSTEMNAME.${ENDCOLOUR}"
+	if [ -f /etc/default/locale ]; then
+		if grep -q 'LANG="ru_RU.UTF-8"' /etc/default/locale >>$OUTPUT; then
+			if [ -z ${1+x} ]; then
+				echo -e "${LIGHTYELLOW}Этот скрипт собирает модули для $SYSTEMNAME.${ENDCOLOUR}"
+				echo -e
+			else
+				echo -e $1
+				echo
+			fi
+			echo -e "Поддерживаемые команды : ${CYAN}${CMD[*]}${ENDCOLOUR}"
 			echo -e
+            echo -e "Синтаксис: ${MAGENTA}$0${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
+            if [ -L /usr/bin/$LIVEKITNAME-install ] && [ "$0" != "/usr/bin/$LIVEKITNAME-install" ]; then
+                echo -e "\t${CYAN}$LIVEKITNAME-install${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
+            fi
+			echo -e "\tзапуск от start_cmd до end_cmd"
+			echo -e "\tесли start_cmd опущен, выполняются все команды, начиная с первой"
+			echo -e "\tесли end_cmd опущен, выполняются все команды до последней"
+			echo -e "\tвведите одну команду, чтобы запустить определенную команду"
+			echo -e "\tвведите '-' как единственный аргумент для запуска всех команд"
+			echo -e "\t"
+			echo -e "\tСкрипты установки должны находиться в папке с именем будущего модуля."
+			echo -e "\tНапример, чтобы собрать модуль с именем 06-vscode, скрипты сборки"
+			echo -e "\tдолжны находиться по следующему пути: ${LIGHTYELLOW}$CURRENT_DIR/modules/06-vscode${ENDCOLOUR}"
+			echo -e "\tПримеры:"
+			echo -e "\t${LIGHTYELLOW}$0 build_modules${ENDCOLOUR} сборка модулей"
+			echo -e "\t${LIGHTYELLOW}$0 repack_system${ENDCOLOUR} перепаковка системы с типом сжатия, указанным"
+			echo -e "\tв /etc/$LIVEKITNAME/config в переменной COMP_TYPE"
+			echo -e "\t${LIGHTYELLOW}$0 -${ENDCOLOUR} эта команда запустит обе функции поочерёдно"
+			exit 0
 		else
-			echo -e $1
-			echo
-		fi
-		echo -e "Поддерживаемые команды : ${CYAN}${CMD[*]}${ENDCOLOUR}"
-		echo -e
-		echo -e "Синтаксис: ${MAGENTA}$0${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
-		if [ -L /usr/bin/$LIVEKITNAME-install ] && [ "$0" != "/usr/bin/$LIVEKITNAME-install" ]; then
-			echo -e "\t${CYAN}$LIVEKITNAME-install${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
-		fi
-		echo -e "\tзапуск от start_cmd до end_cmd"
-		echo -e "\tесли start_cmd опущен, выполняются все команды, начиная с первой"
-		echo -e "\tесли end_cmd опущен, выполняются все команды до последней"
-		echo -e "\tвведите одну команду, чтобы запустить определенную команду"
-		echo -e "\tвведите '-' как единственный аргумент для запуска всех команд"
-		echo -e "\t"
-		echo -e "\tПримеры:${LIGHTYELLOW}$0 build_bootstrap - build_chroot${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 - build_chroot${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 build_bootstrap -${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 build_iso${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 -${ENDCOLOUR}"
-		exit 0
-	else
-		if [ -z ${1+x} ]; then
-			echo -e "${LIGHTYELLOW}This script builds bootable $SYSTEMNAME ISO image.${ENDCOLOUR}"
+			if [ -z ${1+x} ]; then
+				echo -e "${LIGHTYELLOW}This script builds modules for $SYSTEMNAME.${ENDCOLOUR}"
+				echo -e
+			else
+				echo -e $1
+				echo
+			fi
+			echo -e "Supported commands : ${CYAN}${CMD[*]}${ENDCOLOUR}"
 			echo -e
-		else
-			echo -e $1
-			echo
+			echo -e "Syntax: ${MAGENTA}$0${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
+			if [ -L /usr/bin/$LIVEKITNAME-install ] && [ "$0" != "/usr/bin/$LIVEKITNAME-install" ]; then
+				echo -e "\t${CYAN}$LIVEKITNAME-install${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
+			fi
+			echo -e "\trun from start_cmd to end_cmd"
+			echo -e "\tif start_cmd is omitted, start from first command"
+			echo -e "\tif end_cmd is omitted, end with last command"
+			echo -e "\tenter single cmd to run the specific command"
+			echo -e "\tenter '-' as only argument to run all commands"
+			echo -e "\t"
+			echo -e "\tThe installation scripts must be in the folder with the"
+			echo -e "\tname of the future module. For example, to build a module"
+			echo -e "\tnamed 06-vscode, build scripts should be in the following"
+			echo -e "\tpath: ${LIGHTYELLOW}$CURRENT_DIR/modules/06-vscode${ENDCOLOUR}"
+			echo -e "\tExamples:"
+			echo -e "\t${LIGHTYELLOW}$0 build_modules ${ENDCOLOUR} build modules"
+			echo -e "\t${LIGHTYELLOW}$0 repack_system ${ENDCOLOUR} repack the system with the"
+			echo -e "\tcompression type specified by /etc/$LIVEKITNAME/config in COMP_TYPE variable"
+			echo -e "\t${LIGHTYELLOW}$0 - ${ENDCOLOUR} this command will run both functions alternately"
+			exit 0
 		fi
-		echo -e "Supported commands : ${CYAN}${CMD[*]}${ENDCOLOUR}"
-		echo -e
-		echo -e "Syntax: ${MAGENTA}$0${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
-		if [ -L /usr/bin/$LIVEKITNAME-install ] && [ "$0" != "/usr/bin/$LIVEKITNAME-install" ]; then
-			echo -e "\t${CYAN}$LIVEKITNAME-install${ENDCOLOUR} [start_cmd] [-] [end_cmd]"
-		fi
-		echo -e "\trun from start_cmd to end_cmd"
-		echo -e "\tif start_cmd is omitted, start from first command"
-		echo -e "\tif end_cmd is omitted, end with last command"
-		echo -e "\tenter single cmd to run the specific command"
-		echo -e "\tenter '-' as only argument to run all commands"
-		echo -e "\t"
-		echo -e "\tExamples:${LIGHTYELLOW}$0 build_bootstrap - build_chroot${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 - build_chroot${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 build_bootstrap -${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 build_iso${ENDCOLOUR}"
-		echo -e "\t\t${LIGHTYELLOW}$0 -${ENDCOLOUR}"
-		exit 0
 	fi
 }
 
@@ -652,7 +661,11 @@ function build_modules() {
 
 	MODULES_DIR=$CURRENT_DIR/build
 
-	cd $CURRENT_DIR/modules
+	if [ -d $CURRENT_DIR/modules ]; then
+		cd $CURRENT_DIR/modules
+	else
+		help
+	fi
 
 	for MODULE in *; do
 		MODULE_UPPER_DIR="$MODULES_DIR/$MODULE-upper"
